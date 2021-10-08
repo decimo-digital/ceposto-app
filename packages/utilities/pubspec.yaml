@@ -1,0 +1,38 @@
+name: utilities
+description: Collezione di varie utility.
+version: 0.0.1
+homepage: null
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+  flutter: ">=1.20.0"
+
+dependencies:
+  async: ^2.8.1
+  auto_size_text: ^3.0.0-nullsafety.0
+  cached_network_image: ^3.1.0
+  crypto: ^3.0.1
+  device_info: ^2.0.2
+  dio: ^4.0.0
+  image_picker: ^0.8.0+1
+  image_cropper: ^1.4.1
+  flutter:
+    sdk: flutter
+  flutter_image_compress: ^1.1.0
+  flutter_map: ^0.14.0
+  flutter_secure_storage: ^4.2.1
+  flutter_svg: ^0.22.0
+  fluttertoast: ^8.0.8
+  geolocator: ^7.6.0
+  get: ^4.3.8
+  latlong2: ^0.8.0
+  mutex: ^3.0.0
+  package_info: ^2.0.2
+  pointycastle: ^3.3.2
+  shared_preferences: ^2.0.7
+  lint: ^1.7.2
+
+dev_dependencies:
+  flutter_lints: ^1.0.0
+  flutter_test:
+    sdk: flutter
