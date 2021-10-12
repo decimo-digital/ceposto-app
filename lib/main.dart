@@ -1,4 +1,5 @@
 import 'package:ceposto/pages/login.dart';
+import 'package:ceposto/utils/light_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 
@@ -20,6 +21,7 @@ class CePosto extends StatelessWidget {
           page: () => const Login(),
         ),
       ],
+      theme: LightTheme.theme,
     );
   }
 }

@@ -5,7 +5,6 @@ import 'package:get/state_manager.dart';
 
 import 'package:utilities/utilities/src/operators.dart';
 import 'package:utilities/utils/fonts.dart';
-import 'package:utilities/utils/patterns.dart';
 
 // ignore: public_member_api_docs
 const focusedColor = Colors.blue;
