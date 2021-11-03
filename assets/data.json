@@ -1,0 +1,26 @@
+[
+    {
+      "placeImage": "images/hawkers.jpg",
+      "placeName": "Catullo",
+      "placeItems": ["Burgers","Chinese","Fast Food","Italian","Juice"],
+      "minOrder": 80
+    },
+    {
+      "placeImage": "images/flipping.jpg",
+      "placeName": "Pizza Napoli Dock",
+      "placeItems": ["Burgers","Chinese","Fast Food","Italian","Juice"],
+      "minOrder": 65
+    },
+    {
+      "placeImage": "images/pizzahut.jpg",
+      "placeName": "Aladino",
+      "placeItems": ["Pizza","Chinese","Fast Food","Italian","Juice"],
+      "minOrder": 90
+    },
+    {
+      "placeImage": "images/bluehill.jpg",
+      "placeName": "Japanese Bad",
+      "placeItems": ["Burgers","Chinese","Fast Food","Italian","Juice"],
+      "minOrder": 70
+    }
+  ]
