@@ -48,15 +48,15 @@ flutter:
   uses-material-design: true
 
   assets:
-    - images/burger.jpg
-    - images/cheesechilly.jpg
-    - images/noodles.jpg
-    - images/pizza.jpg
-    - images/hawkers.jpg
-    - images/bluehill.jpg
-    - images/pizzahut.jpg
-    - images/flipping.jpg
-    - images/CePosto.png
+    - assets/images/burger.jpg
+    - assets/images/cheesechilly.jpg
+    - assets/images/noodles.jpg
+    - assets/images/pizza.jpg
+    - assets/images/hawkers.jpg
+    - assets/images/bluehill.jpg
+    - assets/images/pizzahut.jpg
+    - assets/images/flipping.jpg
+    - assets/images/CePosto.png
     - assets/data.json
 
   # To add assets to your application, add an assets section, like this:
