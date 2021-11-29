@@ -1,9 +1,16 @@
+import 'package:ceposto/blocs/form/bloc/form_bloc.dart';
+import 'package:ceposto/blocs/restaurant/restaurant_bloc.dart';
+import 'package:ceposto/network/rest_client.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:convert';
+import 'models/restaurant.dart';
 import 'welcome_screen/welcome.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'restourant_page.dart';
 import 'booking_page.dart';
+import 'package:http/http.dart' as http;
+import 'package:ceposto/widgets/restaurant_widget.dart';
 
 void main() {
   runApp(MyApp());
@@ -13,13 +20,28 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'CePosto',
-      theme: ThemeData(
-        appBarTheme: AppBarTheme(brightness: Brightness.dark),
-        primaryColor: Colors.black,
+    return MultiRepositoryProvider(
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (_) => FormBloc(),
+          ),
+          BlocProvider(
+            create: (context) => RestaurantBloc(
+              restClient: context.read<RestClient>(),
+            )..fetchRestaurant(),
+          ),
+        ],
+        child: MaterialApp(
+          title: 'CePosto',
+          theme: ThemeData(
+            appBarTheme: AppBarTheme(brightness: Brightness.dark),
+            primaryColor: Colors.black,
+          ),
+          home: Welcome(),
+        ),
       ),
-      home: RestaurantPage(),
+      providers: [RepositoryProvider(create: (_) => RestClient())],
     );
   }
 }
@@ -135,25 +157,20 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text('CePosto'),
       ),
-      body: Container(
-        child: FutureBuilder(
-            initialData: <Widget>[Text("")],
-            future: createList(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: ListView(
-                    primary: false,
-                    shrinkWrap: true,
-                    children: snapshot.data,
-                  ),
-                );
-              } else {
-                return CircularProgressIndicator();
-              }
-            }),
-      ),
+      body: BlocBuilder<RestaurantBloc, RestaurantState>(
+          builder: (context, state) {
+        if (state is ErrorRestaurantState) {
+          return _errorRestaurantState(state.error);
+        } else if (state is FetchingRestaurantState) {
+          return _loadingRestaurantState();
+        } else if (state is NoRestaurantState) {
+          return _noRestaurantState();
+        } else if (state is FetchedRestaurantState) {
+          return _listRestaurant(state.restaurant);
+        }
+
+        return Container();
+      }),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -173,4 +190,17 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
+  Widget _listRestaurant(List<Restaurant> restaurants) => ListView.builder(
+      itemCount: restaurants.length,
+      itemBuilder: (context, index) => RestaurantWidget(restaurants[index]));
+
+  Widget _errorRestaurantState(String error) => Center(child: Text(error));
+
+  Widget _noRestaurantState() =>
+      Center(child: Text('Non ci sono ristoranti disponibili'));
+
+  Widget _loadingRestaurantState() => Center(
+        child: CircularProgressIndicator(),
+      );
 }
