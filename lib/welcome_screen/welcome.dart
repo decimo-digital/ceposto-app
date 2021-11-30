@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ceposto/blocs/form/bloc/form_bloc.dart' as B;
+import 'package:ceposto/blocs/login/bloc/login_bloc.dart' as B;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Welcome extends StatelessWidget {
@@ -30,13 +30,12 @@ class Welcome extends StatelessWidget {
                 )));
   }
 
-  Widget _email(BuildContext context, B.FormState state) => Container(
+  Widget _email(BuildContext context, FormState state) => Container(
         padding: EdgeInsets.all(15),
         child: TextField(
             style: TextStyle(color: Colors.black),
             obscureText: false,
             decoration: InputDecoration(
-              errorText: !state.validEmail ? 'Email non valida' : null,
               border: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.black)),
               labelText: 'Email',
@@ -53,14 +52,14 @@ class Welcome extends StatelessWidget {
             border: UnderlineInputBorder(),
             labelText: 'Password',
           ),
-          onChanged: context.watch<B.FormBloc>().changePassword,
+          onChanged: context.watch<FormBloc>().changePassword,
         ),
       );
 
-  Widget _loginButton(BuildContext context, B.FormState state) => Container(
+  Widget _loginButton(BuildContext context, FormState state) => Container(
         padding: const EdgeInsets.all(15),
         child: ElevatedButton(
-          onPressed: state.validForm == true ? () {} : null,
+          onPressed: () {},
           child: const Text('Accedi'),
           style: ElevatedButton.styleFrom(
               primary: Colors.black,

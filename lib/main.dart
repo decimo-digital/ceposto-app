@@ -1,4 +1,4 @@
-import 'package:ceposto/blocs/form/bloc/form_bloc.dart';
+import 'package:ceposto/blocs/login/bloc/login_bloc.dart';
 import 'package:ceposto/blocs/restaurant/restaurant_bloc.dart';
 import 'package:ceposto/network/rest_client.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (_) => FormBloc(),
+            create: (_) => LoginBloc(),
           ),
           BlocProvider(
             create: (context) => RestaurantBloc(
