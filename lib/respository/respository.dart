@@ -8,7 +8,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class UserRepository {
   var loginUrl = 'https://api-smsimone.cloud.okteto.net/api/auth/login';
-  final FlutterSecureStorage storage = new FlutterSecureStorage();
 
   Future<bool> hasToken() async {
     var value = await storage.read(key: 'token');

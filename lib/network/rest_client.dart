@@ -4,7 +4,6 @@ import 'package:ceposto/models/restaurant_response.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class RestClient {
   Future<RestaurantResponse> RestaurantRes() async {
