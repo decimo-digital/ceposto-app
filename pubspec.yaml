@@ -25,8 +25,14 @@ dependencies:
     sdk: flutter
   percent_indicator: "^2.1.7+2"
   flutter_bloc: ^8.0.0
+  bloc: ^8.0.0
   equatable: ^1.2.5
   rxdart: ^0.24.0
+  shared_preferences: ^2.0.0
+  
+  flutter_secure_storage: ^5.0.2
+  
+
  
   
 

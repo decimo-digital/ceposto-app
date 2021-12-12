@@ -1,13 +1,11 @@
-import 'package:ceposto/blocs/login/bloc/login_bloc.dart';
 import 'package:ceposto/blocs/restaurant/restaurant_bloc.dart';
 import 'package:ceposto/network/rest_client.dart';
-import 'package:ceposto/respository/respository.dart';
-import 'package:ceposto/respository/respository.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:convert';
 import 'models/restaurant.dart';
-import 'respository/respository.dart';
+
 import 'welcome_screen/welcome.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'restourant_page.dart';
@@ -16,24 +14,20 @@ import 'package:http/http.dart' as http;
 import 'package:ceposto/widgets/restaurant_widget.dart';
 
 void main() {
-  final userRepository = UserRepository();
-  runApp(MyApp(userRepository: userRepository));
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
-  final UserRepository userRepository;
-
-  MyApp({Key key, @required this.userRepository}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       child: MultiBlocProvider(
         providers: [
-          BlocProvider(
+          /*  BlocProvider(
             create: (_) => LoginBloc(userRepository: userRepository),
-          ),
+          ),*/
           BlocProvider(
             create: (context) => RestaurantBloc(
               restClient: context.read<RestClient>(),
@@ -46,10 +40,7 @@ class MyApp extends StatelessWidget {
             appBarTheme: AppBarTheme(brightness: Brightness.dark),
             primaryColor: Colors.black,
           ),
-          home: Welcome(
-            userRepository: userRepository,
-            key: key,
-          ),
+          home: Welcome(),
         ),
       ),
       providers: [RepositoryProvider(create: (_) => RestClient())],
