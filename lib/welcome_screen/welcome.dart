@@ -1,15 +1,9 @@
 import 'dart:convert';
 
 import 'package:ceposto/main.dart';
-
 import 'package:flutter/material.dart';
-
-import 'package:ceposto/network/rest_client.dart';
-
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
 
 class Welcome extends StatefulWidget {
   @override
@@ -37,7 +31,7 @@ class _welcomeState extends State<Welcome> {
                 Container(
                     padding: EdgeInsets.all(0),
                     child: Image.asset(
-                      '',
+                      'images/CePosto.png',
                       height: 350,
                     )),
                 _email(),

@@ -1,17 +1,13 @@
+import 'dart:convert';
+
 import 'package:ceposto/blocs/restaurant/restaurant_bloc.dart';
 import 'package:ceposto/network/rest_client.dart';
-
+import 'package:ceposto/widgets/restaurant_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'dart:convert';
-import 'models/restaurant.dart';
 
+import 'models/restaurant.dart';
 import 'welcome_screen/welcome.dart';
-import 'package:percent_indicator/percent_indicator.dart';
-import 'restourant_page.dart';
-import 'booking_page.dart';
-import 'package:http/http.dart' as http;
-import 'package:ceposto/widgets/restaurant_widget.dart';
 
 void main() {
   runApp(MyApp());

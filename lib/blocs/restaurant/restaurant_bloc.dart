@@ -1,9 +1,8 @@
 import 'package:bloc/bloc.dart';
-import 'package:ceposto/network/rest_client.dart';
-import 'package:equatable/equatable.dart';
 import 'package:ceposto/models/restaurant.dart';
 import 'package:ceposto/models/restaurant_response.dart';
-import 'dart:async';
+import 'package:ceposto/network/rest_client.dart';
+import 'package:equatable/equatable.dart';
 
 part 'restaurant_event.dart';
 part 'restaurant_state.dart';

@@ -1,7 +1,7 @@
+import 'dart:async';
+
 import 'package:ceposto/models/restaurant.dart';
 import 'package:flutter/material.dart';
-import 'package:percent_indicator/percent_indicator.dart';
-import 'dart:async';
 
 class RestaurantPage extends StatefulWidget {
   final Restaurant restaurant;

@@ -1,6 +1,7 @@
-import '../restourant_page.dart';
-import 'package:flutter/material.dart';
 import 'package:ceposto/models/restaurant.dart';
+import 'package:flutter/material.dart';
+
+import '../restourant_page.dart';
 
 class RestaurantWidget extends StatelessWidget {
   final Restaurant restaurant;
@@ -25,10 +26,11 @@ class RestaurantWidget extends StatelessWidget {
               children: <Widget>[
                 ClipRRect(
                   borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(2.0),
-                      topRight: Radius.circular(2.0)),
+                    topLeft: Radius.circular(2.0),
+                    topRight: Radius.circular(2.0),
+                  ),
                   child: Image.asset(
-                    '',
+                    'images/cheesechilly.jpg',
                     width: 100,
                     height: 125,
                     fit: BoxFit.cover,
@@ -39,8 +41,12 @@ class RestaurantWidget extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(restaurant.name,
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(
+                        restaurant.name ?? '---',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
                         child: Text(

@@ -1,11 +1,8 @@
-import 'package:ceposto/models/response_login.dart';
-import 'package:ceposto/models/restaurant.dart';
-import 'package:ceposto/welcome_screen/welcome.dart';
-import 'package:ceposto/models/restaurant_response.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:io';
+
+import 'package:ceposto/models/restaurant_response.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
 
 class RestClient {
   FlutterSecureStorage storage = FlutterSecureStorage();
@@ -20,7 +17,7 @@ class RestClient {
           'access-token': '$token'
         });
     var risposta = response.statusCode;
-    var ok = jsonDecode(response.body);
+    var ok = jsonDecode(response.body) as List<dynamic>;
     if (response.statusCode == 200) {
       return RestaurantResponse.fromJson(ok);
     } else {
