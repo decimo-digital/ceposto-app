@@ -25,7 +25,7 @@ class Restaurant {
         freeSeats: json['freeSeats'],
         totalSeats: json['totalSeats'],
         occupancyRate: json['occupancyRate'],
-        name: json['name'],
+        name: json['storeName'],
         owner: json['owner'],
       );
     } catch (e) {

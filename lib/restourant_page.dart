@@ -49,10 +49,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(
-          Icons.arrow_back,
-          size: 20,
-        ),
+        automaticallyImplyLeading: true,
       ),
       floatingActionButton: Container(
         width: 300,
@@ -84,7 +81,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    "$restaurant.name",
+                    "${restaurant.name}",
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 22,
@@ -177,43 +174,54 @@ class _RestaurantPageState extends State<RestaurantPage> {
                   Container(
                     margin: EdgeInsets.only(right: 20),
                     child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          Container(
-                            height: 30,
-                            width: 30,
-                            child: FloatingActionButton(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        Container(
+                          height: 30,
+                          width: 30,
+                          child: InkWell(
+                            onTap: _decrementCounter,
+                            child: Material(
+                              elevation: 5,
+                              color: Colors.black,
                               shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(2))),
-                              backgroundColor: Colors.black,
-                              child: Icon(Icons.remove),
-                              onPressed: _decrementCounter,
+                                  borderRadius: BorderRadius.circular(2)),
+                              child: Icon(
+                                Icons.remove,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
-                          StreamBuilder(
-                              stream: _stream,
-                              builder: (BuildContext context,
-                                  AsyncSnapshot snapshot) {
-                                return Text(
-                                  snapshot.data != null
-                                      ? snapshot.data.toString()
-                                      : "0",
-                                );
-                              }),
-                          Container(
-                            height: 30,
-                            width: 30,
-                            child: FloatingActionButton(
+                        ),
+                        StreamBuilder(
+                            stream: _stream,
+                            builder:
+                                (BuildContext context, AsyncSnapshot snapshot) {
+                              return Text(
+                                snapshot.data != null
+                                    ? snapshot.data.toString()
+                                    : "0",
+                              );
+                            }),
+                        Container(
+                          height: 30,
+                          width: 30,
+                          child: InkWell(
+                            onTap: _incrementCounter,
+                            child: Material(
+                              elevation: 5,
+                              color: Colors.black,
                               shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(2))),
-                              backgroundColor: Colors.black,
-                              child: Icon(Icons.add),
-                              onPressed: _incrementCounter,
+                                  borderRadius: BorderRadius.circular(2)),
+                              child: Icon(
+                                Icons.add,
+                                color: Colors.white,
+                              ),
                             ),
-                          )
-                        ]),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

@@ -58,14 +58,15 @@ class RestaurantWidget extends StatelessWidget {
                         text: TextSpan(
                           children: [
                             TextSpan(
-                              text: "${restaurant.distance}KM ",
+                              text: "${restaurant.distance} KM ",
                               style: TextStyle(color: Colors.green),
                             ),
                             WidgetSpan(
-                                child: Icon(
-                              Icons.people_alt,
-                              size: 15,
-                            )),
+                              child: Icon(
+                                Icons.people_alt,
+                                size: 15,
+                              ),
+                            ),
                           ],
                         ),
                       ),
