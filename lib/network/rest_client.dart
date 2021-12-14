@@ -13,15 +13,16 @@ class RestClient {
     String token = await storage.read(key: "accessToken");
 
     final response = await http.get(
-        Uri.parse('https://api-smsimone.cloud.okteto.net/api/merchant/1/data'),
+        Uri.parse('https://api-smsimone.cloud.okteto.net/api/merchant'),
         headers: {
-          // aggiungere accessToken
           "Content-type": "application/json",
-          "Authorization": "Bearer $token"
+          'Accept': 'application/json',
+          'access-token': '$token'
         });
     var risposta = response.statusCode;
+    var ok = jsonDecode(response.body);
     if (response.statusCode == 200) {
-      return RestaurantResponse().fromJson(jsonDecode(response.body));
+      return RestaurantResponse.fromJson(ok);
     } else {
       throw Exception('Non posso caricare Ristoranti $risposta token $token');
     }

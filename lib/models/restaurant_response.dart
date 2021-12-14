@@ -1,4 +1,5 @@
 import 'package:ceposto/models/restaurant.dart';
+import 'dart:convert';
 
 class RestaurantResponse {
   final List<Restaurant> restaurants;
@@ -10,6 +11,4 @@ class RestaurantResponse {
           restaurants: (json['restaurants'] as List)
               .map((restaurant) => Restaurant.fromJson(restaurant))
               .toList(growable: false));
-
-  Future<RestaurantResponse> fromJson(jsonDecode) {} // da risolvere
 }

@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-
+import '../restourant_page.dart';
 import 'package:flutter/material.dart';
 import 'package:ceposto/models/restaurant.dart';
 
@@ -29,7 +28,7 @@ class RestaurantWidget extends StatelessWidget {
                       topLeft: Radius.circular(2.0),
                       topRight: Radius.circular(2.0)),
                   child: Image.asset(
-                    'https://picsum.photos/250?image=9',
+                    '',
                     width: 100,
                     height: 125,
                     fit: BoxFit.cover,
@@ -67,6 +66,12 @@ class RestaurantWidget extends StatelessWidget {
                       ElevatedButton(
                         onPressed: () {
                           // Respond to button press
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => RestaurantPage(
+                                        restaurant: restaurant,
+                                      )));
                         },
                         child: Text('Prenota'),
                         style: ElevatedButton.styleFrom(

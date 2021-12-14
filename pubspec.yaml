@@ -58,14 +58,5 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  assets:
-    - assets/images/burger.jpg
-    - assets/images/cheesechilly.jpg
-    - assets/images/noodles.jpg
-    - assets/images/pizza.jpg
-    - assets/images/hawkers.jpg
-    - assets/images/bluehill.jpg
-    - assets/images/pizzahut.jpg
-    - assets/images/flipping.jpg
-    - assets/images/CePosto.png
-    - assets/data.json
+  
+    

@@ -101,13 +101,15 @@ class _welcomeState extends State<Welcome> {
             'Authorization': 'Bearer'
           });
 
-      Map<String, dynamic> jResponse = json.decode(response.body);
-
-      await storage.write(key: "token", value: jResponse["accessToken"]);
-
       var zio = response.statusCode;
 
       if (response.statusCode == 200) {
+        Map<String, dynamic> jResponse = json.decode(response.body);
+
+        await storage.write(
+            key: "accessToken", value: jResponse["accessToken"]);
+
+        print('LOGIN TOKEN --- ' + jResponse['accessToken']);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => MyHomePage()));
       } else {

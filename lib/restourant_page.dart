@@ -1,13 +1,18 @@
+import 'package:ceposto/models/restaurant.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'dart:async';
 
 class RestaurantPage extends StatefulWidget {
+  final Restaurant restaurant;
+  RestaurantPage({Key key, @required this.restaurant}) : super(key: key);
   @override
-  _RestaurantPageState createState() => _RestaurantPageState();
+  _RestaurantPageState createState() => _RestaurantPageState(this.restaurant);
 }
 
 class _RestaurantPageState extends State<RestaurantPage> {
+  final Restaurant restaurant;
+  _RestaurantPageState(this.restaurant);
   List<String> _dynamicChips = ['Health', 'Food', 'Nature'];
 
   int _counter = 0;
@@ -79,7 +84,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    "Japaneese Taco Fusion",
+                    "$restaurant.name",
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 22,
@@ -317,6 +322,4 @@ Widget restaurantTimingsData(String time, bool isSelected) {
             ],
           ),
         );
-
-  void dispose() {}
 }
