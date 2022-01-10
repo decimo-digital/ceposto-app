@@ -179,10 +179,6 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: Icon(Icons.food_bank),
             label: 'Ristoranti',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_box_outlined),
-            label: 'Profilo',
-          ),
         ],
         selectedItemColor: Colors.black,
       ),
