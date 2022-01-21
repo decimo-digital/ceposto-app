@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:ceposto/models/restaurant_response.dart';
+import 'package:ceposto/models/user.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
@@ -19,7 +20,6 @@ class RestClient {
         });
     var risposta = response.statusCode;
     var ok = jsonDecode(response.body) as List<dynamic>;
-    print('IL TIPO= ' + ok.runtimeType.toString());
     if (response.statusCode == 200) {
       return RestaurantResponse.fromJson(ok);
     } else {

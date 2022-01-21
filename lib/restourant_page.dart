@@ -1,7 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:ceposto/models/restaurant.dart';
+import 'package:ceposto/models/user.dart';
+import 'package:ceposto/models/user_response.dart';
+import 'package:ceposto/network/rest_client.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
 class RestaurantPage extends StatefulWidget {
   final Restaurant restaurant;
@@ -12,7 +19,14 @@ class RestaurantPage extends StatefulWidget {
 
 class _RestaurantPageState extends State<RestaurantPage> {
   final Restaurant restaurant;
+  RestClient restClient;
+  Future<User> futureUser;
+  var posti;
+
   _RestaurantPageState(this.restaurant);
+  final DateTime now = DateTime.now();
+  final DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+
   List<String> _dynamicChips = ['Health', 'Food', 'Nature'];
 
   int _counter = 0;
@@ -55,7 +69,11 @@ class _RestaurantPageState extends State<RestaurantPage> {
         width: 300,
         child: ElevatedButton(
           onPressed: () {
-            // Respond to button press
+            int seats = int.parse(posti);
+            postBook(restaurant.id, seats,
+                now.millisecondsSinceEpoch.toString(), 75);
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Prenotazione effettuata")));
           },
           child: Text('Prenota un tavolo'),
           style: ElevatedButton.styleFrom(
@@ -98,7 +116,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
                         color: Colors.blueGrey,
                       ),
                       Text(
-                        "Via Don Giuseppe, 14, Torino",
+                        "${restaurant.distance}",
                         style: TextStyle(color: Colors.blueGrey, fontSize: 15),
                       )
                     ],
@@ -197,6 +215,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
                             stream: _stream,
                             builder:
                                 (BuildContext context, AsyncSnapshot snapshot) {
+                              posti = snapshot.data.toString();
                               return Text(
                                 snapshot.data != null
                                     ? snapshot.data.toString()
@@ -262,6 +281,48 @@ Widget chip(String label, Color color) {
     shadowColor: Colors.grey[60],
     padding: EdgeInsets.all(6.0),
   );
+}
+
+postBook(int merchantId, int seatAmount, String date, int requesterId) async {
+  FlutterSecureStorage storage = FlutterSecureStorage();
+  String token = await storage.read(key: "accessToken");
+  try {
+    var response = await http.post(
+        Uri.parse("https://api-smsimone.cloud.okteto.net/api/prenotation"),
+        body: jsonEncode({
+          "merchantId": merchantId,
+          "seatsAmount": seatAmount,
+          "date": date,
+          "requesterId": requesterId,
+        }),
+        headers: {
+          "Content-type": "application/json",
+          'Accept': 'application/json',
+          'access-token': '$token'
+        });
+  } catch (error) {
+    print(error);
+  }
+}
+
+Future<User> getUser() async {
+  FlutterSecureStorage storage = FlutterSecureStorage();
+  String token = await storage.read(key: "accessToken");
+
+  final response = await http.get(
+      Uri.parse('https://api-smsimone.cloud.okteto.net/api/users'),
+      headers: {
+        "Content-type": "application/json",
+        'Accept': 'application/json',
+        'access-token': '$token'
+      });
+  var risposta = response.statusCode;
+  var ok1 = jsonDecode(response.body);
+  if (response.statusCode == 200) {
+    return User.fromJson(ok1);
+  } else {
+    throw Exception('Non posso caricare User $risposta');
+  }
 }
 
 Widget restaurantTimingsData(String time, bool isSelected) {
