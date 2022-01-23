@@ -20,8 +20,8 @@ class RestaurantPage extends StatefulWidget {
 class _RestaurantPageState extends State<RestaurantPage> {
   final Restaurant restaurant;
   RestClient restClient;
-  Future<User> futureUser;
-  var posti;
+  User user;
+  int Nposti;
 
   _RestaurantPageState(this.restaurant);
   final DateTime now = DateTime.now();
@@ -35,6 +35,10 @@ class _RestaurantPageState extends State<RestaurantPage> {
 
   void initState() {
     super.initState();
+    getUser().then((data) {
+      user = data;
+    });
+
     _streamController = StreamController();
     _stream = _streamController.stream;
   }
@@ -69,11 +73,15 @@ class _RestaurantPageState extends State<RestaurantPage> {
         width: 300,
         child: ElevatedButton(
           onPressed: () {
-            int seats = int.parse(posti);
-            postBook(restaurant.id, seats,
-                now.millisecondsSinceEpoch.toString(), 75);
-            ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Prenotazione effettuata")));
+            if (Nposti <= 0) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Numero di posti non valido")));
+            } else {
+              postBook(restaurant.id, Nposti,
+                  now.millisecondsSinceEpoch.toString(), user.id);
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Prenotazione effettuata")));
+            }
           },
           child: Text('Prenota un tavolo'),
           style: ElevatedButton.styleFrom(
@@ -215,7 +223,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
                             stream: _stream,
                             builder:
                                 (BuildContext context, AsyncSnapshot snapshot) {
-                              posti = snapshot.data.toString();
+                              Nposti = getPosti(snapshot.data);
                               return Text(
                                 snapshot.data != null
                                     ? snapshot.data.toString()
@@ -303,6 +311,11 @@ postBook(int merchantId, int seatAmount, String date, int requesterId) async {
   } catch (error) {
     print(error);
   }
+}
+
+getPosti(int postiPrenotati) {
+  int posti = postiPrenotati;
+  return posti;
 }
 
 Future<User> getUser() async {
