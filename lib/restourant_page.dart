@@ -76,7 +76,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
             if (Nposti <= 0) {
               ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text("Numero di posti non valido")));
-            } else {
+            } else if (Nposti <= restaurant.freeSeats) {
               postBook(restaurant.id, Nposti,
                   now.millisecondsSinceEpoch.toString(), user.id);
               ScaffoldMessenger.of(context).showSnackBar(
@@ -167,7 +167,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
                       physics: NeverScrollableScrollPhysics(),
                       childAspectRatio: 2.6,
                       children: [
-                        restaurantTimingsData("19:00", true),
+                        restaurantTimingsData("19:00", false),
                         restaurantTimingsData("19:30", false),
                         restaurantTimingsData("20:30", false),
                         restaurantTimingsData("21:30", false),
@@ -206,7 +206,9 @@ class _RestaurantPageState extends State<RestaurantPage> {
                           height: 30,
                           width: 30,
                           child: InkWell(
-                            onTap: _decrementCounter,
+                            onTap: () {
+                              if (Nposti > 2) _decrementCounter();
+                            },
                             child: Material(
                               elevation: 5,
                               color: Colors.black,
@@ -227,7 +229,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
                               return Text(
                                 snapshot.data != null
                                     ? snapshot.data.toString()
-                                    : "0",
+                                    : "1",
                               );
                             }),
                         Container(

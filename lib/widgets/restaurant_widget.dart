@@ -58,7 +58,7 @@ class RestaurantWidget extends StatelessWidget {
                         text: TextSpan(
                           children: [
                             TextSpan(
-                              text: "${restaurant.distance} KM ",
+                              text: "${100 - restaurant.occupancyRate} %",
                               style: TextStyle(color: Colors.green),
                             ),
                             WidgetSpan(
