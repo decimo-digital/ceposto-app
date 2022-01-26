@@ -3,13 +3,11 @@ import 'dart:convert';
 
 import 'package:ceposto/models/restaurant.dart';
 import 'package:ceposto/models/user.dart';
-import 'package:ceposto/models/user_response.dart';
 import 'package:ceposto/network/rest_client.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:intl/intl.dart';
 import 'package:ceposto/utils/preferences.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class RestaurantPage extends StatefulWidget {
   final Restaurant restaurant;
@@ -75,15 +73,34 @@ class _RestaurantPageState extends State<RestaurantPage> {
               return ElevatedButton(
                 onPressed: user == null
                     ? null
-                    : () {
+                    : () async {
                         if (_counter <= 0) {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text("Numero di posti non valido")));
                         } else if (_counter <= restaurant.freeSeats) {
-                          postBook(restaurant.id, Nposti,
-                              now.millisecondsSinceEpoch.toString(), user.id);
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text("Prenotazione effettuata")));
+                          final result = await postBook(
+                            restaurant.id,
+                            Nposti,
+                            now.millisecondsSinceEpoch.toString(),
+                            user.id,
+                          );
+                          if (result) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  "Prenotazione effettuata",
+                                ),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  "C'è stato qualche problema ad effettuare la prenotazione",
+                                ),
+                              ),
+                            );
+                          }
                         }
                       },
                 child: Text('Prenota un tavolo'),
@@ -296,29 +313,37 @@ Widget chip(String label, Color color) {
   );
 }
 
-postBook(int merchantId, int seatAmount, String date, int requesterId) async {
+Future<bool> postBook(
+  int merchantId,
+  int seatAmount,
+  String date,
+  int requesterId,
+) async {
   /*FlutterSecureStorage storage = FlutterSecureStorage();*/
   /*String token = await storage.read(key: "accessToken");*/
   Preferences preferences = await Preferences.instance;
-  Future<String> token = preferences.getFromKey("accessToken");
-  try {
-    var response = await http.post(
-        Uri.parse(
-            "https://api-dbperservice-smsimone.cloud.okteto.net/api/prenotation"),
-        body: jsonEncode({
-          "merchantId": merchantId,
-          "seatsAmount": seatAmount,
-          "date": date,
-          "requesterId": requesterId,
-        }),
-        headers: {
-          "Content-type": "application/json",
-          'Accept': 'application/json',
-          'access-token': '$token'
-        });
-  } catch (error) {
-    print(error);
-  }
+  final token = await preferences.getFromKey("accessToken");
+
+  var response = await http.post(
+      Uri.parse(
+          "https://api-dbperservice-smsimone.cloud.okteto.net/api/prenotation"),
+      body: jsonEncode({
+        "merchantId": merchantId,
+        "seatsAmount": seatAmount,
+        "date": date,
+        "requesterId": requesterId,
+      }),
+      headers: {
+        "Content-type": "application/json",
+        'Accept': 'application/json',
+        'access-token': token
+      }).onError((error, stackTrace) {
+    debugPrint('Failed to post on prenotation: $error');
+    debugPrintStack(stackTrace: stackTrace);
+    return null;
+  });
+
+  return response.statusCode == 200;
 }
 
 getPosti(int postiPrenotati) {
@@ -330,13 +355,13 @@ Future<User> getUser() async {
   /*FlutterSecureStorage storage = FlutterSecureStorage();
   String token = await storage.read(key: "accessToken");*/
   Preferences preferences = await Preferences.instance;
-  Future<String> token = preferences.getFromKey("accessToken");
+  String token = await preferences.getFromKey("accessToken");
   final response = await http.get(
       Uri.parse('https://api-dbperservice-smsimone.cloud.okteto.net/api/users'),
       headers: {
         "Content-type": "application/json",
         'Accept': 'application/json',
-        'access-token': '$token',
+        'access-token': token,
       });
   var responseCode = response.statusCode;
   var responseDecode = jsonDecode(response.body);

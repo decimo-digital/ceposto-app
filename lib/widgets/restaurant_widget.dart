@@ -1,4 +1,5 @@
 import 'package:ceposto/models/restaurant.dart';
+import 'package:ceposto/network/rest_client.dart';
 import 'package:flutter/material.dart';
 
 import '../restourant_page.dart';
@@ -71,14 +72,20 @@ class RestaurantWidget extends StatelessWidget {
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
+                          final restaurantData =
+                              await RestClient.getRestaurantData(
+                            restaurant.id,
+                          );
                           // Respond to button press
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => RestaurantPage(
-                                        restaurant: restaurant,
-                                      )));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => RestaurantPage(
+                                restaurant: restaurantData,
+                              ),
+                            ),
+                          );
                         },
                         child: Text('Prenota'),
                         style: ElevatedButton.styleFrom(
