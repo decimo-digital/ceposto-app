@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:js_util';
 import 'package:ceposto/network/rest_client.dart';
 import 'package:ceposto/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:ceposto/utils/preferences.dart';
 
 class Welcome extends StatefulWidget {
   @override
@@ -82,33 +84,36 @@ class _welcomeState extends State<Welcome> {
       );
 
   Future<void> login() async {
+    Preferences preferences = await Preferences.instance;
+    Future<String> token;
     if (_passwordController.text.isNotEmpty &&
         _usernameController.text.isNotEmpty) {
       var response = await http.post(
-          Uri.parse('https://api-smsimone.cloud.okteto.net/api/auth/login'),
+          Uri.parse(
+              'https://api-dbperservice-smsimone.cloud.okteto.net/api/auth/login'),
           body: jsonEncode({
             "username": _usernameController.text,
             "password": _passwordController.text,
           }),
           headers: {
             'Content-type': 'application/json',
-            'Authorization': 'Bearer'
           });
-
-      var zio = response.statusCode;
 
       if (response.statusCode == 200) {
         Map<String, dynamic> jResponse = json.decode(response.body);
 
-        await storage.write(
-            key: "accessToken", value: jResponse["accessToken"]);
+        preferences.secureSave("accessToken", jResponse['accessToken']);
+
+        /*await storage.write(
+            key: "accessToken", value: jResponse["accessToken"]);*/
 
         print('LOGIN TOKEN --- ' + jResponse['accessToken']);
+
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => MyHomePage()));
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Credenziali non valide $zio")));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Credenziali non valide")));
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

@@ -4,15 +4,19 @@ import 'package:ceposto/models/restaurant_response.dart';
 import 'package:ceposto/models/user.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:ceposto/utils/preferences.dart';
 
 class RestClient {
-  FlutterSecureStorage storage = FlutterSecureStorage();
   Future<RestaurantResponse> RestaurantRes() async {
-    String token = await storage.read(
-        key: "accessToken"); // legge il token del login sullo storage
+    Preferences preferences = await Preferences.instance;
+    /*String token = await storage.read(
+        key: "accessToken");*/
+    Future<String> token = preferences
+        .getFromKey("accessToken"); // legge il token del login sullo storage
 
     final response = await http.get(
-        Uri.parse('https://api-smsimone.cloud.okteto.net/api/merchant'),
+        Uri.parse(
+            'https://api-dbperservice-smsimone.cloud.okteto.net/api/merchant'),
         headers: {
           "Content-type": "application/json",
           'Accept': 'application/json',

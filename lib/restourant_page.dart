@@ -8,6 +8,7 @@ import 'package:ceposto/network/rest_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
+import 'package:ceposto/utils/preferences.dart';
 import 'package:http/http.dart' as http;
 
 class RestaurantPage extends StatefulWidget {
@@ -20,7 +21,6 @@ class RestaurantPage extends StatefulWidget {
 class _RestaurantPageState extends State<RestaurantPage> {
   final Restaurant restaurant;
   RestClient restClient;
-  User user;
   int Nposti;
 
   _RestaurantPageState(this.restaurant);
@@ -31,24 +31,21 @@ class _RestaurantPageState extends State<RestaurantPage> {
 
   int _counter = 0;
   StreamController _streamController;
-  Stream _stream;
+  Stream<dynamic> _stream;
 
   void initState() {
     super.initState();
-    getUser().then((data) {
-      user = data;
-    });
 
     _streamController = StreamController();
     _stream = _streamController.stream;
   }
 
   void _incrementCounter() {
-    _streamController.sink.add(_counter++);
+    _streamController.sink.add(++_counter);
   }
 
   void _decrementCounter() {
-    _streamController.sink.add(_counter--);
+    _streamController.sink.add(--_counter);
   }
 
   dynamicChips() {
@@ -71,24 +68,31 @@ class _RestaurantPageState extends State<RestaurantPage> {
       ),
       floatingActionButton: Container(
         width: 300,
-        child: ElevatedButton(
-          onPressed: () {
-            if (Nposti <= 0) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("Numero di posti non valido")));
-            } else if (Nposti <= restaurant.freeSeats) {
-              postBook(restaurant.id, Nposti,
-                  now.millisecondsSinceEpoch.toString(), user.id);
-              ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("Prenotazione effettuata")));
-            }
-          },
-          child: Text('Prenota un tavolo'),
-          style: ElevatedButton.styleFrom(
-              primary: Colors.black,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(2))),
-        ),
+        child: FutureBuilder<User>(
+            future: getUser(),
+            builder: (context, snapshot) {
+              final user = snapshot.data;
+              return ElevatedButton(
+                onPressed: user == null
+                    ? null
+                    : () {
+                        if (_counter <= 0) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text("Numero di posti non valido")));
+                        } else if (_counter <= restaurant.freeSeats) {
+                          postBook(restaurant.id, Nposti,
+                              now.millisecondsSinceEpoch.toString(), user.id);
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text("Prenotazione effettuata")));
+                        }
+                      },
+                child: Text('Prenota un tavolo'),
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.black,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(2))),
+              );
+            }),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: SingleChildScrollView(
@@ -207,7 +211,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
                           width: 30,
                           child: InkWell(
                             onTap: () {
-                              if (Nposti > 2) _decrementCounter();
+                              if (Nposti > 1) _decrementCounter();
                             },
                             child: Material(
                               elevation: 5,
@@ -221,17 +225,16 @@ class _RestaurantPageState extends State<RestaurantPage> {
                             ),
                           ),
                         ),
-                        StreamBuilder(
-                            stream: _stream,
-                            builder:
-                                (BuildContext context, AsyncSnapshot snapshot) {
-                              Nposti = getPosti(snapshot.data);
-                              return Text(
-                                snapshot.data != null
-                                    ? snapshot.data.toString()
-                                    : "1",
-                              );
-                            }),
+                        StreamBuilder<dynamic>(
+                          stream: _stream,
+                          initialData: 0,
+                          builder: (context, snapshot) {
+                            final data = snapshot.data;
+                            assert(data != null);
+                            Nposti = getPosti(snapshot.data);
+                            return Text(data.toString());
+                          },
+                        ),
                         Container(
                           height: 30,
                           width: 30,
@@ -294,11 +297,14 @@ Widget chip(String label, Color color) {
 }
 
 postBook(int merchantId, int seatAmount, String date, int requesterId) async {
-  FlutterSecureStorage storage = FlutterSecureStorage();
-  String token = await storage.read(key: "accessToken");
+  /*FlutterSecureStorage storage = FlutterSecureStorage();*/
+  /*String token = await storage.read(key: "accessToken");*/
+  Preferences preferences = await Preferences.instance;
+  Future<String> token = preferences.getFromKey("accessToken");
   try {
     var response = await http.post(
-        Uri.parse("https://api-smsimone.cloud.okteto.net/api/prenotation"),
+        Uri.parse(
+            "https://api-dbperservice-smsimone.cloud.okteto.net/api/prenotation"),
         body: jsonEncode({
           "merchantId": merchantId,
           "seatsAmount": seatAmount,
@@ -321,22 +327,23 @@ getPosti(int postiPrenotati) {
 }
 
 Future<User> getUser() async {
-  FlutterSecureStorage storage = FlutterSecureStorage();
-  String token = await storage.read(key: "accessToken");
-
+  /*FlutterSecureStorage storage = FlutterSecureStorage();
+  String token = await storage.read(key: "accessToken");*/
+  Preferences preferences = await Preferences.instance;
+  Future<String> token = preferences.getFromKey("accessToken");
   final response = await http.get(
-      Uri.parse('https://api-smsimone.cloud.okteto.net/api/users'),
+      Uri.parse('https://api-dbperservice-smsimone.cloud.okteto.net/api/users'),
       headers: {
         "Content-type": "application/json",
         'Accept': 'application/json',
-        'access-token': '$token'
+        'access-token': '$token',
       });
-  var risposta = response.statusCode;
-  var ok1 = jsonDecode(response.body);
+  var responseCode = response.statusCode;
+  var responseDecode = jsonDecode(response.body);
   if (response.statusCode == 200) {
-    return User.fromJson(ok1);
+    return User.fromJson(responseDecode);
   } else {
-    throw Exception('Non posso caricare User $risposta');
+    throw Exception('Non posso caricare User $responseCode');
   }
 }
 
