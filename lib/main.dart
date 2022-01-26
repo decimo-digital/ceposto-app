@@ -54,6 +54,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  @Deprecated('Utilizza dati di mock')
   Future<List<Widget>> createList() async {
     List<Widget> items = [];
     String dataString =

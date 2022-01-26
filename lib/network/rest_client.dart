@@ -1,18 +1,15 @@
 import 'dart:convert';
 
 import 'package:ceposto/models/restaurant_response.dart';
-import 'package:ceposto/models/user.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:http/http.dart' as http;
 import 'package:ceposto/utils/preferences.dart';
+import 'package:http/http.dart' as http;
 
 class RestClient {
   Future<RestaurantResponse> RestaurantRes() async {
     Preferences preferences = await Preferences.instance;
-    /*String token = await storage.read(
-        key: "accessToken");*/
-    Future<String> token = preferences
-        .getFromKey("accessToken"); // legge il token del login sullo storage
+
+    /// legge il token del login sullo storage
+    String token = await preferences.getFromKey("accessToken");
 
     final response = await http.get(
         Uri.parse(
@@ -20,14 +17,14 @@ class RestClient {
         headers: {
           "Content-type": "application/json",
           'Accept': 'application/json',
-          'access-token': '$token'
+          'access-token': token,
         });
-    var risposta = response.statusCode;
-    var ok = jsonDecode(response.body) as List<dynamic>;
+
     if (response.statusCode == 200) {
-      return RestaurantResponse.fromJson(ok);
+      var responseBody = jsonDecode(response.body) as List<dynamic>;
+      return RestaurantResponse.fromJson(responseBody);
     } else {
-      throw Exception('Non posso caricare Ristoranti $risposta');
+      throw Exception('Non posso caricare Ristoranti ${response.statusCode}');
     }
   }
 }

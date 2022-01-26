@@ -1,11 +1,10 @@
 import 'dart:convert';
-import 'dart:js_util';
-import 'package:ceposto/network/rest_client.dart';
+
 import 'package:ceposto/main.dart';
+import 'package:ceposto/utils/preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:ceposto/utils/preferences.dart';
 
 class Welcome extends StatefulWidget {
   @override
@@ -85,7 +84,7 @@ class _welcomeState extends State<Welcome> {
 
   Future<void> login() async {
     Preferences preferences = await Preferences.instance;
-    Future<String> token;
+
     if (_passwordController.text.isNotEmpty &&
         _usernameController.text.isNotEmpty) {
       var response = await http.post(
@@ -103,9 +102,6 @@ class _welcomeState extends State<Welcome> {
         Map<String, dynamic> jResponse = json.decode(response.body);
 
         preferences.secureSave("accessToken", jResponse['accessToken']);
-
-        /*await storage.write(
-            key: "accessToken", value: jResponse["accessToken"]);*/
 
         print('LOGIN TOKEN --- ' + jResponse['accessToken']);
 
