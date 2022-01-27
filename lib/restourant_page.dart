@@ -248,18 +248,22 @@ class _RestaurantPageState extends State<RestaurantPage> {
   }
 }
 
-Container _titleRestaurant(Restaurant restaurant) {
+Widget _titleRestaurant(Restaurant restaurant) {
   String img = restaurant.image;
-  Uint8List _bytesImage;
-  _bytesImage = Base64Decoder().convert(img);
 
-  return Container(
-    height: 250,
-    decoration: BoxDecoration(
-      image:
-          DecorationImage(image: MemoryImage(_bytesImage), fit: BoxFit.cover),
-    ),
-  );
+  if (img == null) {
+    return Image.asset(
+      'images/pizza.jpg',
+      fit: BoxFit.cover,
+      height: 250,
+    );
+  } else {
+    return Image.memory(
+      Base64Decoder().convert(img),
+      fit: BoxFit.cover,
+      height: 250,
+    );
+  }
 }
 
 Widget chip(String label, Color color) {

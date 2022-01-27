@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:ceposto/models/restaurant.dart';
 import 'package:ceposto/network/rest_client.dart';
@@ -28,12 +27,17 @@ class RestaurantWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                ClipRRect(
+                SizedBox(
+                  height: 125,
+                  width: 100,
+                  child: ClipRRect(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(2.0),
                       topRight: Radius.circular(2.0),
                     ),
-                    child: _imageRestaurant(this.restaurant)),
+                    child: _imageRestaurant(this.restaurant),
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Column(
@@ -45,11 +49,17 @@ class RestaurantWidget extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-                        child: Text(
-                          "${restaurant.cuisineType} ", //ITEMS RISTORANTI
-                          style: TextStyle(fontSize: 12.0),
+                      Visibility(
+                        maintainSize: true,
+                        maintainState: true,
+                        maintainAnimation: true,
+                        visible: restaurant.cuisineType != null,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+                          child: Text(
+                            "${restaurant.cuisineType} ", //ITEMS RISTORANTI
+                            style: TextStyle(fontSize: 12.0),
+                          ),
                         ),
                       ),
                       RichText(
@@ -97,18 +107,19 @@ class RestaurantWidget extends StatelessWidget {
         ));
   }
 
-  Container _imageRestaurant(Restaurant restaurant) {
+  Widget _imageRestaurant(Restaurant restaurant) {
     String img = restaurant.image;
-    Uint8List _bytesImage;
-    _bytesImage = Base64Decoder().convert(img);
 
-    return Container(
-      width: 100,
-      height: 125,
-      decoration: BoxDecoration(
-        image:
-            DecorationImage(image: MemoryImage(_bytesImage), fit: BoxFit.cover),
-      ),
-    );
+    if (img == null) {
+      return Image.asset(
+        'images/pizza.jpg',
+        fit: BoxFit.cover,
+      );
+    } else {
+      return Image.memory(
+        Base64Decoder().convert(img),
+        fit: BoxFit.cover,
+      );
+    }
   }
 }
