@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:ceposto/models/restaurant.dart';
 import 'package:ceposto/models/user.dart';
@@ -118,7 +119,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            _titleRestaurant(),
+            _titleRestaurant(this.restaurant),
             SizedBox(
               height: 15,
             ),
@@ -159,41 +160,6 @@ class _RestaurantPageState extends State<RestaurantPage> {
                         Column(children: <Widget>[
                           dynamicChips(),
                         ]),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        WidgetSpan(
-                            child: Icon(
-                          Icons.lock_clock,
-                          size: 18,
-                        )),
-                        TextSpan(
-                          text: " Orario",
-                          style: TextStyle(color: Colors.black, fontSize: 18),
-                        )
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(right: 20),
-                    child: GridView.count(
-                      shrinkWrap: true,
-                      crossAxisCount: 3,
-                      physics: NeverScrollableScrollPhysics(),
-                      childAspectRatio: 2.6,
-                      children: [
-                        restaurantTimingsData("19:00", false),
-                        restaurantTimingsData("19:30", false),
-                        restaurantTimingsData("20:30", false),
-                        restaurantTimingsData("21:30", false),
-                        restaurantTimingsData("21:30", false),
-                        restaurantTimingsData("22:30", false),
                       ],
                     ),
                   ),
@@ -282,13 +248,16 @@ class _RestaurantPageState extends State<RestaurantPage> {
   }
 }
 
-Container _titleRestaurant() {
+Container _titleRestaurant(Restaurant restaurant) {
+  String img = restaurant.image;
+  Uint8List _bytesImage;
+  _bytesImage = Base64Decoder().convert(img);
+
   return Container(
     height: 250,
     decoration: BoxDecoration(
-      image: DecorationImage(
-          image: NetworkImage("https://source.unsplash.com/6uTQmtqcAzs"),
-          fit: BoxFit.cover),
+      image:
+          DecorationImage(image: MemoryImage(_bytesImage), fit: BoxFit.cover),
     ),
   );
 }

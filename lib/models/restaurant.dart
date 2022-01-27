@@ -6,6 +6,8 @@ class Restaurant {
   final num occupancyRate;
   final String name;
   final int owner;
+  final String image;
+  final String cuisineType;
 
   Restaurant({
     this.id,
@@ -15,6 +17,8 @@ class Restaurant {
     this.occupancyRate,
     this.name,
     this.owner,
+    this.cuisineType,
+    this.image,
   });
 
   factory Restaurant.fromJson(Map<String, dynamic> json) {
@@ -27,6 +31,8 @@ class Restaurant {
         occupancyRate: json['occupancyRate'],
         name: json['storeName'],
         owner: json['owner'],
+        image: json['image'],
+        cuisineType: json['cuisineType'],
       );
     } catch (e) {
       print('[Restaurant-fromJson] Failed to parse restaurant: $e');

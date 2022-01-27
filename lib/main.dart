@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:ceposto/blocs/restaurant/restaurant_bloc.dart';
 import 'package:ceposto/network/rest_client.dart';

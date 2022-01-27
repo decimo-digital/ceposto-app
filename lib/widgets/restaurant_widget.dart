@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:ceposto/models/restaurant.dart';
 import 'package:ceposto/network/rest_client.dart';
 import 'package:flutter/material.dart';
@@ -26,17 +29,11 @@ class RestaurantWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(2.0),
-                    topRight: Radius.circular(2.0),
-                  ),
-                  child: Image.asset(
-                    'images/cheesechilly.jpg',
-                    width: 100,
-                    height: 125,
-                    fit: BoxFit.cover,
-                  ),
-                ),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(2.0),
+                      topRight: Radius.circular(2.0),
+                    ),
+                    child: _imageRestaurant(this.restaurant)),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Column(
@@ -51,7 +48,7 @@ class RestaurantWidget extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
                         child: Text(
-                          'ITEMs', //ITEMS RISTORANTI
+                          "${restaurant.cuisineType} ", //ITEMS RISTORANTI
                           style: TextStyle(fontSize: 12.0),
                         ),
                       ),
@@ -59,7 +56,7 @@ class RestaurantWidget extends StatelessWidget {
                         text: TextSpan(
                           children: [
                             TextSpan(
-                              text: "${100 - restaurant.occupancyRate} %",
+                              text: "${100 - restaurant.occupancyRate} % ",
                               style: TextStyle(color: Colors.green),
                             ),
                             WidgetSpan(
@@ -98,5 +95,20 @@ class RestaurantWidget extends StatelessWidget {
                 ),
               ]),
         ));
+  }
+
+  Container _imageRestaurant(Restaurant restaurant) {
+    String img = restaurant.image;
+    Uint8List _bytesImage;
+    _bytesImage = Base64Decoder().convert(img);
+
+    return Container(
+      width: 100,
+      height: 125,
+      decoration: BoxDecoration(
+        image:
+            DecorationImage(image: MemoryImage(_bytesImage), fit: BoxFit.cover),
+      ),
+    );
   }
 }

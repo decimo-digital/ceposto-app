@@ -11,7 +11,6 @@ class RestClient {
 
     /// legge il token del login sullo storage
     String token = await preferences.getFromKey("accessToken");
-
     final response = await http.get(
         Uri.parse(
             'https://api-dbperservice-smsimone.cloud.okteto.net/api/merchant'),
